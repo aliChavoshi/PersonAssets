@@ -20,6 +20,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
         //     .WithOne(x => x.Person)
         //     .HasForeignKey(x => x.PersonId);
 
+        builder.Entity<Person>()
+            .HasIndex(x => x.NationalCode).IsUnique(true);
+
         builder.Entity<Car>()
             .HasOne(x => x.Person)
             .WithMany(x => x.Cars)

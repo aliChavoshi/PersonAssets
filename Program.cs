@@ -14,7 +14,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter(); // Handle 
 //configuration of Identity
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => { options.SignIn.RequireConfirmedAccount = true; }
+builder.Services.AddDefaultIdentity<ApplicationUser>(
+    options =>
+    {
+        options.SignIn.RequireConfirmedAccount = true;
+        options.Password.RequireDigit = true; //1525458
+        options.Password.RequireLowercase = false;
+    }
 ).AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddControllersWithViews(); //MVC
@@ -51,8 +57,6 @@ app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
-
 
 app.MapRazorPages()
     .WithStaticAssets();

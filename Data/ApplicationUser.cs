@@ -15,4 +15,6 @@ public class ApplicationUser : IdentityUser
     [MinLength(3, ErrorMessage = "حداقل کاراکتر ورودی 3 میباشد")]
     [Display(Name = "نام خانوادگی")]
     public string LastName { get; set; }
+
+    public bool IsActive { get; set; } = true;
 }
