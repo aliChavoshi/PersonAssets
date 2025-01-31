@@ -2,22 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PersonAssets.Data;
+using PersonAssets.Models.Person;
 
 namespace PersonAssets.Controllers;
 
-[Route("[controller]/[action]")]
-[Authorize]
 public class PersonController(ApplicationDbContext context) : Controller
 {
     // GET: Person
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
-        return View(await context.Person.ToListAsync());
+        return View(await context.Person.ToListAsync(cancellationToken: cancellationToken));
     }
 
     // GET: Person/Details/5
@@ -39,23 +37,33 @@ public class PersonController(ApplicationDbContext context) : Controller
     }
 
     // GET: Person/Create
+    [HttpGet]
     public IActionResult Create()
     {
         return View();
     }
 
+    // POST: Person/Create
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
-    // [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Person person)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(PersonViewModel model)
     {
-        if (await context.Person.AnyAsync(x => x.NationalCode == person.NationalCode))
+        if (ModelState.IsValid)
         {
-            ModelState.AddModelError("NationalCode","کد ملی وارد شده اشتباه میباشد");
-            return View(person);
+            var person = new Person
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                NationalCode = model.NationalCode
+            };
+            context.Add(person);
+            await context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
-        context.Add(person);
-        await context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
+
+        return View(model);
     }
 
     // GET: Person/Edit/5

@@ -1,10 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PersonAssets.Data;
+namespace PersonAssets.Models.Person;
 
-[Table(name: "Person", Schema = "ass")]
-public class Person : BaseEntity
+public class PersonViewModel
 {
     [Required(ErrorMessage = "لطفا نام خود را وارد کنید")]
     [Display(Name = "نام")]
@@ -14,17 +12,7 @@ public class Person : BaseEntity
     [Display(Name = "نام خانوادگی")]
     public string LastName { get; set; }
 
-    // [MaxLength(10)]
-    // [MinLength(10)]
     [Length(10, 10, ErrorMessage = "مقدار کد ملی باید 10 رقم باشد")]
     [Required]
     public string NationalCode { get; set; }
-
-    public List<PersonCar> PersonCars { get; set; } //many to many
-
-    // #region Relations
-    //
-    // public List<Car> Cars { get; set; }
-
-    // #endregion
 }
