@@ -24,7 +24,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 
         builder.Entity<Person>()
             .HasIndex(x => x.NationalCode).IsUnique(true);
-
+        builder.Entity<Person>().HasQueryFilter(x => x.IsDeleted == false);
         #endregion
 
         #region Car
@@ -41,7 +41,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
         builder.Entity<Car>()
             .Property(x => x.Name)
             .HasMaxLength(100);
-
+        builder.Entity<Car>().HasQueryFilter(x => x.IsDeleted == false);
         #endregion
 
         #region PersonCar

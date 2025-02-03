@@ -1,9 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 
 namespace PersonAssets.Models.Person;
 
-public class PersonViewModel
+public class EditPersonViewModel
 {
+    [HiddenInput(DisplayValue = true)]
+    public int Id { get; set; }
+
     [Required(ErrorMessage = "لطفا نام خود را وارد کنید")]
     [Display(Name = "نام")]
     public string FirstName { get; set; }
