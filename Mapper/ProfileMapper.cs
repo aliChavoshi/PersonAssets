@@ -9,7 +9,11 @@ public class ProfileMapper : Profile
     public ProfileMapper()
     {
         CreateMap<CreatePersonViewModel, Person>().ReverseMap();
-        CreateMap<Person, EditPersonViewModel>();
-        CreateMap<EditPersonViewModel, Person>();
+            // .ForMember(x=>x.FirstName,
+            //     c=>c.Ignore())
+            // .ForMember(x => x.LastName,
+            //     c => c.MapFrom(v => v.LastName.Trim().ToUpper()));
+        CreateMap<Person, EditPersonViewModel>().ReverseMap();
+        // CreateMap<EditPersonViewModel, Person>();
     }
 }

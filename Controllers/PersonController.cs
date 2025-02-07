@@ -21,7 +21,7 @@ public class PersonController(ApplicationDbContext context, IMapper mapper) : Co
 
     public async Task<IActionResult> IndexOfDeletedUser()
     {
-        return View(await context.Person.IgnoreQueryFilters().Where(x=>x.IsDeleted == true).ToListAsync());
+        return View(await context.Person.IgnoreQueryFilters().Where(x => x.IsDeleted == true).ToListAsync());
     }
 
     // GET: Person/Details/5
@@ -56,6 +56,22 @@ public class PersonController(ApplicationDbContext context, IMapper mapper) : Co
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CreatePersonViewModel model)
     {
+        foreach (var key in ModelState.Keys)
+        {
+            var value = ModelState[key]; // key value
+            foreach (var error in value!.Errors)
+            {
+                ModelState.AddModelError(key, error.ErrorMessage);
+                return View(model);
+            }
+        }
+
+        if (await IsAnyNationalCode(model.NationalCode))
+        {
+            ModelState.AddModelError(nameof(model.NationalCode), "کد ملی استفاده شده نا معتبر میباشد");
+            return View(model);
+        }
+
         if (ModelState.IsValid)
         {
             var person = mapper.Map<Person>(model);
@@ -65,6 +81,11 @@ public class PersonController(ApplicationDbContext context, IMapper mapper) : Co
         }
 
         return View(model);
+    }
+
+    private async Task<bool> IsAnyNationalCode(string nationalCode)
+    {
+        return await context.Person.AnyAsync(x => x.NationalCode == nationalCode);
     }
 
     // GET: Person/Edit/5
@@ -83,11 +104,17 @@ public class PersonController(ApplicationDbContext context, IMapper mapper) : Co
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, EditPersonViewModel model)
     {
+        var person = await context.Person.FindAsync(model.Id);
+        if (person!.NationalCode != model.NationalCode && await IsAnyNationalCode(model.NationalCode))
+        {
+            ModelState.AddModelError(nameof(model.NationalCode), "کد ملی استفاده شده نا معتبر میباشد");
+            return View(model);
+        }
+
         if (ModelState.IsValid)
         {
-            var person = await context.Person.FindAsync(model.Id);
             mapper.Map(model, person);
-            if (person != null) context.Person.Update(person);
+            context.Person.Update(person);
             await context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -127,10 +154,5 @@ public class PersonController(ApplicationDbContext context, IMapper mapper) : Co
 
         await context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
-    }
-
-    private bool PersonExists(int id)
-    {
-        return context.Person.Any(e => e.Id == id);
     }
 }
