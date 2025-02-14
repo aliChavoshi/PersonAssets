@@ -7,16 +7,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PersonAssets.Data;
+using PersonAssets.Interfaces;
 using PersonAssets.Models.Person;
 
 namespace PersonAssets.Controllers;
 
-public class PersonController(ApplicationDbContext context, IMapper mapper) : Controller
+public class PersonController(ApplicationDbContext context, IMapper mapper, IPersonRepository personRepository)
+    : Controller
 {
     // GET: Person
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
-        return View(await context.Person.ToListAsync(cancellationToken: cancellationToken));
+        return View(await personRepository.GetAllPersons());
     }
 
     public async Task<IActionResult> IndexOfDeletedUser()
@@ -66,7 +68,7 @@ public class PersonController(ApplicationDbContext context, IMapper mapper) : Co
             }
         }
 
-        if (await IsAnyNationalCode(model.NationalCode))
+        if (await personRepository.IsAnyNationalCode(model.NationalCode))
         {
             ModelState.AddModelError(nameof(model.NationalCode), "کد ملی استفاده شده نا معتبر میباشد");
             return View(model);
@@ -75,17 +77,11 @@ public class PersonController(ApplicationDbContext context, IMapper mapper) : Co
         if (ModelState.IsValid)
         {
             var person = mapper.Map<Person>(model);
-            context.Add(person);
-            await context.SaveChangesAsync();
+            await personRepository.Create(person);
             return RedirectToAction(nameof(Index));
         }
 
         return View(model);
-    }
-
-    private async Task<bool> IsAnyNationalCode(string nationalCode)
-    {
-        return await context.Person.AnyAsync(x => x.NationalCode == nationalCode);
     }
 
     // GET: Person/Edit/5
@@ -105,7 +101,7 @@ public class PersonController(ApplicationDbContext context, IMapper mapper) : Co
     public async Task<IActionResult> Edit(int id, EditPersonViewModel model)
     {
         var person = await context.Person.FindAsync(model.Id);
-        if (person!.NationalCode != model.NationalCode && await IsAnyNationalCode(model.NationalCode))
+        if (person!.NationalCode != model.NationalCode && await personRepository.IsAnyNationalCode(model.NationalCode))
         {
             ModelState.AddModelError(nameof(model.NationalCode), "کد ملی استفاده شده نا معتبر میباشد");
             return View(model);

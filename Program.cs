@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PersonAssets.Data;
+using PersonAssets.Interfaces;
 using PersonAssets.Mapper;
+using PersonAssets.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +28,8 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(
 
 builder.Services.AddControllersWithViews(); //MVC
 builder.Services.AddAutoMapper(typeof(ProfileMapper)); //AutoMapper
+builder.Services.AddScoped<IPersonRepository, PersonRepository>(); //Dependency Injection
+
 var app = builder.Build(); // Build
 
 // Configure the HTTP request pipeline.
