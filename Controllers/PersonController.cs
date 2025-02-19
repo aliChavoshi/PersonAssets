@@ -9,39 +9,25 @@ using Microsoft.EntityFrameworkCore;
 using PersonAssets.Data;
 using PersonAssets.Interfaces;
 using PersonAssets.Models.Person;
+using PersonAssets.Services;
 
 namespace PersonAssets.Controllers;
 
-public class PersonController(ApplicationDbContext context, IMapper mapper, IPersonRepository personRepository)
+public class PersonController(IMapper mapper, IPersonRepository personRepository)
     : Controller
 {
     // GET: Person
-    public async Task<IActionResult> Index(CancellationToken cancellationToken)
+    public async Task<IActionResult> Index(string searchString)
     {
-        return View(await personRepository.GetAllPersons());
+        ViewBag.search = searchString;
+        // ViewData["search"] = searchString;
+        // TempData["success"] = true;
+        return View(await personRepository.GetAllPersons(searchString));
     }
 
     public async Task<IActionResult> IndexOfDeletedUser()
     {
-        return View(await context.Person.IgnoreQueryFilters().Where(x => x.IsDeleted == true).ToListAsync());
-    }
-
-    // GET: Person/Details/5
-    public async Task<IActionResult> Details(int? id)
-    {
-        if (id == null)
-        {
-            return NotFound();
-        }
-
-        var person = await context.Person
-            .FirstOrDefaultAsync(m => m.Id == id);
-        if (person == null)
-        {
-            return NotFound();
-        }
-
-        return View(person);
+        return View(await personRepository.GetDeletedUsers());
     }
 
     // GET: Person/Create
@@ -85,9 +71,9 @@ public class PersonController(ApplicationDbContext context, IMapper mapper, IPer
     }
 
     // GET: Person/Edit/5
-    public async Task<IActionResult> Edit(int? id)
+    public async Task<IActionResult> Edit(int id)
     {
-        var person = await context.Person.FindAsync(id); //Person
+        var person = await personRepository.GetPersonById(id); //Person
         if (person == null) return NotFound();
 
         return View(mapper.Map<EditPersonViewModel>(person));
@@ -100,7 +86,7 @@ public class PersonController(ApplicationDbContext context, IMapper mapper, IPer
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, EditPersonViewModel model)
     {
-        var person = await context.Person.FindAsync(model.Id);
+        var person = await personRepository.GetPersonById(model.Id);
         if (person!.NationalCode != model.NationalCode && await personRepository.IsAnyNationalCode(model.NationalCode))
         {
             ModelState.AddModelError(nameof(model.NationalCode), "کد ملی استفاده شده نا معتبر میباشد");
@@ -110,8 +96,7 @@ public class PersonController(ApplicationDbContext context, IMapper mapper, IPer
         if (ModelState.IsValid)
         {
             mapper.Map(model, person);
-            context.Person.Update(person);
-            await context.SaveChangesAsync();
+            await personRepository.Edit(person);
             return RedirectToAction(nameof(Index));
         }
 
@@ -126,8 +111,8 @@ public class PersonController(ApplicationDbContext context, IMapper mapper, IPer
             return NotFound();
         }
 
-        var person = await context.Person
-            .FirstOrDefaultAsync(m => m.Id == id);
+        var person = await personRepository.GetPersonById(id.Value);
+        // var person = await context.Person.FindAsync(id.Value);
         if (person == null)
         {
             return NotFound();
@@ -141,14 +126,13 @@ public class PersonController(ApplicationDbContext context, IMapper mapper, IPer
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var person = await context.Person.FindAsync(id);
+        var person = await personRepository.GetPersonById(id);
         if (person != null)
         {
             person.IsDeleted = true;
-            context.Person.Update(person);
+            await personRepository.Delete(person);
         }
 
-        await context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
 }
