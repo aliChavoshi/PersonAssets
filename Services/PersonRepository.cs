@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using PersonAssets.Data;
+using PersonAssets.Data.Entity;
 using PersonAssets.Interfaces;
 
 namespace PersonAssets.Services;

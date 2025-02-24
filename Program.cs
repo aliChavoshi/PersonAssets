@@ -29,6 +29,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(
 builder.Services.AddControllersWithViews(); //MVC
 builder.Services.AddAutoMapper(typeof(ProfileMapper)); //AutoMapper
 builder.Services.AddScoped<IPersonRepository, PersonRepository>(); //Dependency Injection
+builder.Services.AddScoped<ICarRepository, CarRepository>();
 
 var app = builder.Build(); // Build
 

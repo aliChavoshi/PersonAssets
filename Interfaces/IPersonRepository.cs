@@ -1,4 +1,5 @@
 ﻿using PersonAssets.Data;
+using PersonAssets.Data.Entity;
 
 namespace PersonAssets.Interfaces;
 

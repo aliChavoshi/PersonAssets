@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PersonAssets.Data;
+namespace PersonAssets.Data.Entity;
 
 [Table(name: "Person", Schema = "ass")]
 public class Person : BaseEntity

@@ -1,0 +1,64 @@
+﻿@model IEnumerable<PersonAssets.Models.Car.CarViewModel>
+
+@{
+    ViewData["Title"] = "Car List" as string;
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-primary">Car List</h2>
+        <a asp-action="Create" class="btn btn-success"><i class="bi bi-plus-circle"></i> Create New</a>
+    </div>
+
+    <!-- Search Box -->
+    <form asp-action="Index" method="get" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="searchString" class="form-control" placeholder="Search by name or number plate..." value="@ViewData["search"]" />
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-search"></i> Search</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Color)</th>
+                    <th>@Html.DisplayNameFor(model => model.Type)</th>
+                    <th>@Html.DisplayNameFor(model => model.Name)</th>
+                    <th>@Html.DisplayNameFor(model => model.NumberPlate)</th>
+                    <th>ثبت کننده</th>
+                    <th>زمان ثبت</th>
+                    <th>ویرایش کننده</th>
+                    <th>زمان ویرایش</th>
+                    <th>تعداد ویرایش</th>
+                    @* <th>@Html.DisplayNameFor(model => model.IsDeleted)</th> *@
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var car in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => car.Color)</td>
+                        <td>@Html.DisplayFor(modelItem => car.Type)</td>
+                        <td>@Html.DisplayFor(modelItem => car.Name)</td>
+                        <td>@Html.DisplayFor(modelItem => car.NumberPlate)</td>
+                        <td>@car.CreatedBy</td>
+                        <td>@car.CreatedDateTime.Date</td>
+                        <td>@car.ModifiedBy</td>
+                        <td>@car.ModifiedDateTime</td>
+                        <td>@car.Version</td>
+                        @* <td>@Html.DisplayFor(modelItem => car.IsDeleted)</td> *@
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@car.Id" class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i> Edit</a>
+                            <a asp-action="Details" asp-route-id="@car.Id" class="btn btn-info btn-sm"><i class="bi bi-eye"></i> Details</a>
+                            <a asp-action="Delete" asp-route-id="@car.Id" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i> Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

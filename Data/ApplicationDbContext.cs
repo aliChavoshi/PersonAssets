@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using PersonAssets.Data.Entity;
 
 namespace PersonAssets.Data;
 
@@ -42,6 +43,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             .Property(x => x.Name)
             .HasMaxLength(100);
         builder.Entity<Car>().HasQueryFilter(x => x.IsDeleted == false);
+
+        builder.Entity<Car>().HasOne(x => x.CreateUser).WithMany().HasForeignKey(x => x.CreatedBy);
+        builder.Entity<Car>().HasOne(x => x.ModifyUser).WithMany().HasForeignKey(x => x.ModifiedBy);
         #endregion
 
         #region PersonCar

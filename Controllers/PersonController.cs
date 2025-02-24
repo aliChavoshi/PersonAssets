@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PersonAssets.Data;
+using PersonAssets.Data.Entity;
 using PersonAssets.Interfaces;
 using PersonAssets.Models.Person;
 using PersonAssets.Services;

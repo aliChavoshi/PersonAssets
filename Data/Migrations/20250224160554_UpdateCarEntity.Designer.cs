@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PersonAssets.Data;
 
@@ -11,9 +12,11 @@ using PersonAssets.Data;
 namespace PersonAssets.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250224160554_UpdateCarEntity")]
+    partial class UpdateCarEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -247,7 +250,7 @@ namespace PersonAssets.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
@@ -259,7 +262,7 @@ namespace PersonAssets.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ModifiedDateTime")
                         .HasColumnType("datetime2");
@@ -279,10 +282,6 @@ namespace PersonAssets.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("ModifiedBy");
 
                     b.ToTable("Car", "ass");
                 });
@@ -382,21 +381,6 @@ namespace PersonAssets.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("PersonAssets.Data.Entity.Car", b =>
-                {
-                    b.HasOne("PersonAssets.Data.ApplicationUser", "CreateUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
-
-                    b.HasOne("PersonAssets.Data.ApplicationUser", "ModifyUser")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy");
-
-                    b.Navigation("CreateUser");
-
-                    b.Navigation("ModifyUser");
                 });
 
             modelBuilder.Entity("PersonAssets.Data.Entity.PersonCar", b =>

@@ -1,4 +1,4 @@
-﻿namespace PersonAssets.Data;
+﻿namespace PersonAssets.Data.Entity;
 
 public class PersonCar
 {
