@@ -14,7 +14,7 @@ using PersonAssets.Models.Car;
 
 namespace PersonAssets.Controllers;
 
-public class CarsController(ApplicationDbContext context,ICarRepository carRepository,IMapper mapper) : Controller
+public class CarsController(ApplicationDbContext context, ICarRepository carRepository, IMapper mapper) : Controller
 {
     //1. Interface
     //2.
@@ -63,6 +63,7 @@ public class CarsController(ApplicationDbContext context,ICarRepository carRepos
             await carRepository.Create(car);
             return RedirectToAction(nameof(Index));
         }
+
         return View(model);
     }
 
@@ -79,6 +80,7 @@ public class CarsController(ApplicationDbContext context,ICarRepository carRepos
         {
             return NotFound();
         }
+
         return View(car);
     }
 
@@ -87,34 +89,16 @@ public class CarsController(ApplicationDbContext context,ICarRepository carRepos
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("Color,Type,Name,NumberPlate,Id,IsDeleted")] Car car)
+    public async Task<IActionResult> Edit(int id, Car model)
     {
-        if (id != car.Id)
-        {
-            return NotFound();
-        }
-
-        if (ModelState.IsValid)
-        {
-            try
-            {
-                context.Update(car);
-                await context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CarExists(car.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return RedirectToAction(nameof(Index));
-        }
-        return View(car);
+        var car = await context.Car.FindAsync(id);
+        if (car == null) return NotFound(); //404
+        car.Name = model.Name;
+        car.Color = model.Color;
+        car.Type = model.Type;
+        car.NumberPlate = model.NumberPlate;
+        await carRepository.Update(car, User.GetId());
+        return RedirectToAction("Index");
     }
 
     // GET: Cars/Delete/5

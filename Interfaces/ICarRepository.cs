@@ -7,4 +7,5 @@ public interface ICarRepository
 {
     Task<List<CarViewModel>> GetAllCars(string search);
     Task Create(Car car);
+    Task Update(Car car,string userId);
 }

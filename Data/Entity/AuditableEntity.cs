@@ -2,7 +2,7 @@
 
 public class AuditableEntity : BaseEntity
 {
-    public string CreatedBy { get; set; }
+    public string CreatedBy { get; set; } //Id
     public DateTime CreatedDateTime { get; set; } = DateTime.Now;
     public string ModifiedBy { get; set; }
     public DateTime? ModifiedDateTime { get; set; }
