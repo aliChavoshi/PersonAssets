@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,7 @@ using PersonAssets.Services;
 namespace PersonAssets.Controllers;
 
 public class PersonController(IMapper mapper, IPersonRepository personRepository)
-    : Controller
+    : CommonAuthorizeController
 {
     // GET: Person
     public async Task<IActionResult> Index(string searchString)

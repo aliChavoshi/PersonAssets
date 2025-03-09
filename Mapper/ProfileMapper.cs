@@ -19,10 +19,10 @@ public class ProfileMapper : Profile
         // CreateMap<EditPersonViewModel, Person>();
         CreateMap<CreateCarViewModel, Car>().ReverseMap();
         CreateMap<Car, CarViewModel>()
-            .ForMember(x=>x.ModifiedBy,
-                c=>c.MapFrom(v=>v.ModifyUser.UserName))
+            .ForMember(x => x.ModifiedBy,
+                c => c.MapFrom(car => car.ModifyUser.Email))
             .ForMember(x => x.CreatedBy,
-                c => c.MapFrom(v => v.CreateUser.UserName))
+                c => c.MapFrom(v => v.CreateUser.Email))
             .ReverseMap();
     }
 }

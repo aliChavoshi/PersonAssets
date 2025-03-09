@@ -13,16 +13,19 @@ public class CarRepository(ApplicationDbContext context, IMapper mapper) : ICarR
     public async Task<List<CarViewModel>> GetAllCars(string search)
     {
         var asQueryable = context.Car
-            .Include(x => x.CreateUser)
-            .Include(x => x.ModifyUser)
+            .Include(x=>x.CreateUser)
+            .Include(x=>x.ModifyUser)
             .AsQueryable();
+        //Filters
         if (!string.IsNullOrEmpty(search))
         {
             asQueryable = asQueryable.Where(x => x.Name.Contains(search));
         }
-
+        //OrderBy
         asQueryable = asQueryable.OrderBy(x => x.Name);
+        //ToList
         var result = await asQueryable.ToListAsync();
+        //Return Model
         return mapper.Map<List<CarViewModel>>(result);
     }
 
@@ -40,5 +43,10 @@ public class CarRepository(ApplicationDbContext context, IMapper mapper) : ICarR
         car.ModifiedBy = userId;
         context.Update(car);
         await context.SaveChangesAsync();
+    }
+
+    public async Task<Car> GetCarById(int carId)
+    {
+        return await context.Car.FindAsync(carId);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PersonAssets.Data;
 using PersonAssets.Data.Entity;
@@ -34,6 +35,7 @@ public class PersonRepository(ApplicationDbContext context) : IPersonRepository
                 x.FirstName.Contains(search) ||
                 x.NationalCode.Contains(search));
         }
+
         //OrderBy
         asQueryable = asQueryable.OrderBy(x => x.LastName);
         //TODO : Pagination
@@ -77,5 +79,18 @@ public class PersonRepository(ApplicationDbContext context) : IPersonRepository
     public async Task<bool> IsAnyNationalCode(string nationalCode)
     {
         return await context.Person.AnyAsync(x => x.NationalCode == nationalCode);
+    }
+
+    public async Task<SelectList> GetPersonSelectList(int personId)
+    {
+        var persons = await context.Person.ToListAsync();
+
+        var items = persons.Select(p => new SelectListItem
+        {
+            Value = p.Id.ToString(), // Assuming `Id` is the primary key
+            Text = p.LastName + " " + p.FirstName, // Assuming `Name` is a displayable field
+        }).ToList();
+
+        return new SelectList(items, "Value", "Text", personId);
     }
 }

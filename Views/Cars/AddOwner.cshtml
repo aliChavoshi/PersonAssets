@@ -1,0 +1,84 @@
+﻿@model PersonAssets.Data.Entity.Car
+
+@{
+    ViewData["Title"] = "Add Owner";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>AddOwner</h1>
+
+<h4>Car</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddOwner">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Color" class="control-label"></label>
+                <input disabled readonly="readonly" asp-for="Color" class="form-control" />
+                <span asp-validation-for="Color" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Type" class="control-label"></label>
+                <input disabled readonly="readonly" asp-for="Type" class="form-control" />
+                <span asp-validation-for="Type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input disabled readonly="readonly" asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumberPlate" class="control-label"></label>
+                <input disabled readonly="readonly" asp-for="NumberPlate" class="form-control" />
+                <span asp-validation-for="NumberPlate" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-4">
+                <label class="control-label">Person</label>
+                <select class="form-select" asp-items="@(ViewData["Persons"] as SelectList)!"></select>
+                <span asp-validation-for="NumberPlate" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="Id" />
+            
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-6 mt-4">
+        <ol class="list-group list-group-numbered">
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                    <div class="fw-bold">Subheading</div>
+                    Content for list item
+                </div>
+                <span class="badge text-bg-primary rounded-pill">14</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                    <div class="fw-bold">Subheading</div>
+                    Content for list item
+                </div>
+                <span class="badge text-bg-primary rounded-pill">14</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                    <div class="fw-bold">Subheading</div>
+                    Content for list item
+                </div>
+                <span class="badge text-bg-primary rounded-pill">14</span>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

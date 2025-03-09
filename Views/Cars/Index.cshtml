@@ -52,6 +52,7 @@
                         <td>@car.Version</td>
                         @* <td>@Html.DisplayFor(modelItem => car.IsDeleted)</td> *@
                         <td class="text-nowrap">
+                            <a asp-action="AddOwner" asp-route-carId="@car.Id" class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i> Add Owner</a>
                             <a asp-action="Edit" asp-route-id="@car.Id" class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i> Edit</a>
                             <a asp-action="Details" asp-route-id="@car.Id" class="btn btn-info btn-sm"><i class="bi bi-eye"></i> Details</a>
                             <a asp-action="Delete" asp-route-id="@car.Id" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i> Delete</a>

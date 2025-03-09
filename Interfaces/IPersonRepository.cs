@@ -1,4 +1,5 @@
-﻿using PersonAssets.Data;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using PersonAssets.Data;
 using PersonAssets.Data.Entity;
 
 namespace PersonAssets.Interfaces;
@@ -14,4 +15,5 @@ public interface IPersonRepository
     Task Delete(Person person);
     Task Save();
     Task<bool> IsAnyNationalCode(string nationalCode);
+    Task<SelectList> GetPersonSelectList(int personId);
 }

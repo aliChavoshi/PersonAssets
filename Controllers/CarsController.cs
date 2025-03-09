@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,11 +15,18 @@ using PersonAssets.Models.Car;
 
 namespace PersonAssets.Controllers;
 
-public class CarsController(ApplicationDbContext context, ICarRepository carRepository, IMapper mapper) : Controller
+public class CarsController(
+    ApplicationDbContext context,
+    ICarRepository carRepository,
+    IMapper mapper,
+    IPersonRepository personRepository)
+    : CommonAuthorizeController
 {
     //1. Interface
     //2.
     // GET: Cars
+    // [Authorize]
+    // [AllowAnonymous]
     public async Task<IActionResult> Index(string searchString)
     {
         var model = await carRepository.GetAllCars(searchString);
@@ -134,8 +142,12 @@ public class CarsController(ApplicationDbContext context, ICarRepository carRepo
         return RedirectToAction(nameof(Index));
     }
 
-    private bool CarExists(int id)
+    [HttpGet("{carId:int}")] //http:localhost:5200/carId
+    // [Route("AddOwner")]
+    public async Task<IActionResult> AddOwner(int carId)
     {
-        return context.Car.Any(e => e.Id == id);
+        ViewData["Persons"] = await personRepository.GetPersonSelectList(0);
+        var car = await carRepository.GetCarById(carId);
+        return View(car);
     }
 }
