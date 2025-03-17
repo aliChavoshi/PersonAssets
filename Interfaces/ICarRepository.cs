@@ -9,4 +9,6 @@ public interface ICarRepository
     Task Create(Car car);
     Task Update(Car car, string userId);
     Task<Car> GetCarById(int carId);
+    Task AddOwnerOfCar(int carId,int personId);
+    Task<List<AddOwnerViewModel>> GetOwners(int carId);
 }

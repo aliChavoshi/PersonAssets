@@ -7,5 +7,4 @@ public class PersonCar
 
     public Person Person { get; set; }
     public Car Car { get; set; }
-
 }

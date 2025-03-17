@@ -5,12 +5,21 @@ using PersonAssets.Data.Entity;
 
 namespace PersonAssets.Data;
 
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    : IdentityDbContext<ApplicationUser, IdentityRole, string>(options)
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
-    {
-    }
+    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    // {
+    //     //My Code
+    //     // Add services to the container.
+    //     // var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
+    //     //                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+    //     //
+    //     // builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    //     //     options.UseSqlServer(connectionString));
+    //     optionsBuilder.UseSqlServer("Server=.;Database=PersonAssets;Trusted_Connection=True;MultipleActiveResultSets=true");
+    //     base.OnConfiguring(optionsBuilder);
+    // }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -26,6 +35,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
         builder.Entity<Person>()
             .HasIndex(x => x.NationalCode).IsUnique(true);
         builder.Entity<Person>().HasQueryFilter(x => x.IsDeleted == false);
+
         #endregion
 
         #region Car
@@ -46,6 +56,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 
         builder.Entity<Car>().HasOne(x => x.CreateUser).WithMany().HasForeignKey(x => x.CreatedBy);
         builder.Entity<Car>().HasOne(x => x.ModifyUser).WithMany().HasForeignKey(x => x.ModifiedBy);
+
         #endregion
 
         #region PersonCar
@@ -64,7 +75,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
         #endregion
     }
 
-    // public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     public DbSet<Person> Person => Set<Person>();
     public DbSet<Car> Car => Set<Car>();
+    public DbSet<PersonCar> PersonCars => Set<PersonCar>();
 }

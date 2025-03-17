@@ -24,5 +24,9 @@ public class ProfileMapper : Profile
             .ForMember(x => x.CreatedBy,
                 c => c.MapFrom(v => v.CreateUser.Email))
             .ReverseMap();
+
+        CreateMap<Car, AddOwnerViewModel>()
+            .ForMember(x => x.CarId,
+                c => c.MapFrom(car => car.Id));
     }
 }

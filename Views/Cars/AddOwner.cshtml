@@ -1,4 +1,4 @@
-﻿@model PersonAssets.Data.Entity.Car
+﻿@model PersonAssets.Models.Car.AddOwnerViewModel
 
 @{
     ViewData["Title"] = "Add Owner";
@@ -8,69 +8,66 @@
 <h1>AddOwner</h1>
 
 <h4>Car</h4>
-<hr />
+<hr/>
 <div class="row">
     <div class="col-md-4">
         <form asp-action="AddOwner">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Color" class="control-label"></label>
-                <input disabled readonly="readonly" asp-for="Color" class="form-control" />
+                <input disabled readonly="readonly" asp-for="Color" class="form-control"/>
                 <span asp-validation-for="Color" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Type" class="control-label"></label>
-                <input disabled readonly="readonly" asp-for="Type" class="form-control" />
+                <input disabled readonly="readonly" asp-for="Type" class="form-control"/>
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input disabled readonly="readonly" asp-for="Name" class="form-control" />
+                <input disabled readonly="readonly" asp-for="Name" class="form-control"/>
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="NumberPlate" class="control-label"></label>
-                <input disabled readonly="readonly" asp-for="NumberPlate" class="form-control" />
+                <input disabled readonly="readonly" asp-for="NumberPlate" class="form-control"/>
                 <span asp-validation-for="NumberPlate" class="text-danger"></span>
             </div>
             <div class="form-group mb-4">
                 <label class="control-label">Person</label>
-                <select class="form-select" asp-items="@(ViewData["Persons"] as SelectList)!"></select>
+                <select class="form-select" asp-for="OwnerId" asp-items="@(ViewData["Persons"] as SelectList)!"></select>
                 <span asp-validation-for="NumberPlate" class="text-danger"></span>
             </div>
-            <input type="hidden" asp-for="Id" />
-            
+            <input type="hidden" asp-for="CarId"/>
+
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Add New Owner" class="btn btn-success"/>
             </div>
         </form>
     </div>
     <div class="col-md-2"></div>
-    <div class="col-md-6 mt-4">
-        <ol class="list-group list-group-numbered">
-            <li class="list-group-item d-flex justify-content-between align-items-start">
-                <div class="ms-2 me-auto">
-                    <div class="fw-bold">Subheading</div>
-                    Content for list item
-                </div>
-                <span class="badge text-bg-primary rounded-pill">14</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-start">
-                <div class="ms-2 me-auto">
-                    <div class="fw-bold">Subheading</div>
-                    Content for list item
-                </div>
-                <span class="badge text-bg-primary rounded-pill">14</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-start">
-                <div class="ms-2 me-auto">
-                    <div class="fw-bold">Subheading</div>
-                    Content for list item
-                </div>
-                <span class="badge text-bg-primary rounded-pill">14</span>
-            </li>
-        </ol>
-    </div>
+    @if (Model.Owners.Any())
+    {
+        <div class="col-md-6 mt-4">
+            <ol class="list-group list-group-numbered">
+                @foreach (var (x, index) in Model.Owners.Select((owners, i) => (x: owners, i)))
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">@x.OwnerName</div>
+                            @* @x.OwnerName *@
+                        </div>
+                        @* <span class="badge text-bg-primary rounded-pill">@(index + 1)</span> *@
+                        <div class="d-flex">
+                            <a href="" class="btn btn-primary btn-sm me-2">Edit</a>
+                            <a href="" class="btn btn-danger btn-sm">Delete</a>
+                        </div>
+                    </li>
+                }
+            </ol>
+        </div>
+    }
+
 </div>
 
 <div>
@@ -82,3 +79,4 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+

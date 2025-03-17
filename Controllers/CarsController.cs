@@ -143,11 +143,20 @@ public class CarsController(
     }
 
     [HttpGet("{carId:int}")] //http:localhost:5200/carId
-    // [Route("AddOwner")]
     public async Task<IActionResult> AddOwner(int carId)
     {
-        ViewData["Persons"] = await personRepository.GetPersonSelectList(0);
-        var car = await carRepository.GetCarById(carId);
-        return View(car);
+        ViewData["Persons"] = await personRepository.GetPersonSelectList(0); //get list
+        var car = await carRepository.GetCarById(carId); // get car
+        var model = mapper.Map<AddOwnerViewModel>(car); //map car=> model : AddOwnerViewModel
+        model.Owners = await carRepository.GetOwners(carId); //owners
+        return View(model);
+    }
+
+    [HttpPost("{carId:int}")] //http:localhost:5200/carId
+    public async Task<IActionResult> AddOwner(AddOwnerViewModel model)
+    {
+        await carRepository.AddOwnerOfCar(model.CarId, model.OwnerId);
+        return RedirectToAction(nameof(Index));
+        // return RedirectToAction("Index");
     }
 }
