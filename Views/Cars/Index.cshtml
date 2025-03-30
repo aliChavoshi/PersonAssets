@@ -1,4 +1,6 @@
-﻿@model IEnumerable<PersonAssets.Models.Car.CarViewModel>
+﻿@using PersonAssets.Interfaces
+@model IEnumerable<PersonAssets.Models.Car.CarViewModel>
+@inject ICarRepository CarRepository
 
 @{
     ViewData["Title"] = "Car List" as string;
@@ -29,6 +31,7 @@
                     <th>@Html.DisplayNameFor(model => model.Name)</th>
                     <th>@Html.DisplayNameFor(model => model.NumberPlate)</th>
                     <th>ثبت کننده</th>
+                    <th>تعداد مالکین</th>
                     <th>زمان ثبت</th>
                     <th>ویرایش کننده</th>
                     <th>زمان ویرایش</th>
@@ -46,6 +49,7 @@
                         <td>@Html.DisplayFor(modelItem => car.Name)</td>
                         <td>@Html.DisplayFor(modelItem => car.NumberPlate)</td>
                         <td>@car.CreatedBy</td>
+                        <td>@await CarRepository.OwnersOfCar(car.Id)</td>
                         <td>@car.CreatedDateTime.Date</td>
                         <td>@car.ModifiedBy</td>
                         <td>@car.ModifiedDateTime</td>

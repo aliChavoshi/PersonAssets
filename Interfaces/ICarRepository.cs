@@ -11,4 +11,6 @@ public interface ICarRepository
     Task<Car> GetCarById(int carId);
     Task AddOwnerOfCar(int carId,int personId);
     Task<List<AddOwnerViewModel>> GetOwners(int carId);
+    Task<bool> ExistOwnerInCar(int carId, int ownerId);
+    Task<int> OwnersOfCar(int carId);
 }

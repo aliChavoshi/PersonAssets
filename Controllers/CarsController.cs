@@ -145,18 +145,32 @@ public class CarsController(
     [HttpGet("{carId:int}")] //http:localhost:5200/carId
     public async Task<IActionResult> AddOwner(int carId)
     {
+        var model = await InitialDataBeforeAddNewOwner(carId);
+        return View(model);
+    }
+
+    private async Task<AddOwnerViewModel> InitialDataBeforeAddNewOwner(int carId)
+    {
         ViewData["Persons"] = await personRepository.GetPersonSelectList(0); //get list
         var car = await carRepository.GetCarById(carId); // get car
         var model = mapper.Map<AddOwnerViewModel>(car); //map car=> model : AddOwnerViewModel
         model.Owners = await carRepository.GetOwners(carId); //owners
-        return View(model);
+
+        return model;
     }
 
     [HttpPost("{carId:int}")] //http:localhost:5200/carId
     public async Task<IActionResult> AddOwner(AddOwnerViewModel model)
     {
-        await carRepository.AddOwnerOfCar(model.CarId, model.OwnerId);
-        return RedirectToAction(nameof(Index));
-        // return RedirectToAction("Index");
+        //validation
+        if (await carRepository.ExistOwnerInCar(model.CarId, model.OwnerId))
+        {
+            ModelState.AddModelError("","برای این خودرو این شخص از قبل ثبت شده است");
+            var myModel = await InitialDataBeforeAddNewOwner(model.CarId); // load data
+            return View(myModel);
+        }
+        await carRepository.AddOwnerOfCar(model.CarId, model.OwnerId); //add new Item
+        var view = await InitialDataBeforeAddNewOwner(model.CarId); // load data
+        return View(view);
     }
 }

@@ -81,4 +81,14 @@ public class CarRepository(ApplicationDbContext context, IMapper mapper) : ICarR
 
         return list;
     }
+
+    public async Task<bool> ExistOwnerInCar(int carId, int ownerId)
+    {
+        return await context.PersonCars.AnyAsync(x => x.CarId == carId && x.PersonId == ownerId);
+    }
+
+    public async Task<int> OwnersOfCar(int carId)
+    {
+        return await context.PersonCars.CountAsync(x => x.CarId == carId);
+    }
 }

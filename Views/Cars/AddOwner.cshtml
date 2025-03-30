@@ -35,7 +35,7 @@
             </div>
             <div class="form-group mb-4">
                 <label class="control-label">Person</label>
-                <select class="form-select" asp-for="OwnerId" asp-items="@(ViewData["Persons"] as SelectList)!"></select>
+                <select class="form-select select2" asp-for="OwnerId" asp-items="@(ViewData["Persons"] as SelectList)!"></select>
                 <span asp-validation-for="NumberPlate" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="CarId"/>
