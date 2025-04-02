@@ -173,4 +173,10 @@ public class CarsController(
         var view = await InitialDataBeforeAddNewOwner(model.CarId); // load data
         return View(view);
     }
+
+    [HttpGet]
+    public async Task<IActionResult> ConfirmPersonCar()
+    {
+        return View(await carRepository.GetUnConfirmedPersonCar());
+    }
 }

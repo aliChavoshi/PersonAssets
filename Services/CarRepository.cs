@@ -91,4 +91,23 @@ public class CarRepository(ApplicationDbContext context, IMapper mapper) : ICarR
     {
         return await context.PersonCars.CountAsync(x => x.CarId == carId);
     }
+
+    public async Task<List<ConfirmPersonCarViewModel>> GetUnConfirmedPersonCar()
+    {
+        return await context.PersonCars
+            .Where(x => x.IsConfirmed == false)
+            .Include(x => x.Car)
+            .Include(x => x.Person)
+            .Select(x => new ConfirmPersonCarViewModel
+            {
+                CarId = x.CarId,
+                Name = x.Car.Name,
+                NumberPlate = x.Car.NumberPlate,
+                PersonId = x.PersonId,
+                FirstName = x.Person.FirstName,
+                LastName = x.Person.LastName,
+                NationalCode = x.Person.NationalCode,
+                IsConfirmed = x.IsConfirmed
+            }).OrderBy(x=>x.Name).ToListAsync();
+    }
 }

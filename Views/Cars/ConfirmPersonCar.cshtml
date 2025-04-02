@@ -1,0 +1,83 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<PersonAssets.Models.Car.ConfirmPersonCarViewModel>
+
+@{
+    ViewData["Title"] = "Confirm Person Car List";
+    var counter = 1;
+}
+@if (Model.Any())
+{
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="text-primary">Confirm Person Car List</h2>
+        </div>
+
+        <!-- Search Box -->
+        <form asp-action="Index" method="get" class="mb-3">
+            <div class="input-group">
+                <input type="text" name="searchString" class="form-control" placeholder="Search by name or national code..." value="@ViewData["search"]" />
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-search"></i> Search</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered text-center">
+                <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    @* <th>@Html.DisplayNameFor(model => model.CarId)</th> *@
+                    <th>@Html.DisplayNameFor(model => model.Name)</th>
+                    <th>@Html.DisplayNameFor(model => model.NumberPlate)</th>
+                    @* <th>@Html.DisplayNameFor(model => model.PersonId)</th> *@
+                    <th>@Html.DisplayNameFor(model => model.FirstName)</th>
+                    <th>@Html.DisplayNameFor(model => model.LastName)</th>
+                    <th>@Html.DisplayNameFor(model => model.NationalCode)</th>
+                    <th>@Html.DisplayNameFor(model => model.IsConfirmed)</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            @* <td>@Html.DisplayFor(modelItem => item.CarId)</td> *@
+                            <td>@counter</td>
+                            <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                            <td>@Html.DisplayFor(modelItem => item.NumberPlate)</td>
+                            @* <td>@Html.DisplayFor(modelItem => item.PersonId)</td> *@
+                            <td>@Html.DisplayFor(modelItem => item.FirstName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.LastName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.NationalCode)</td>
+                            <td>
+                                @if (item.IsConfirmed)
+                                {
+                                    <span class="badge bg-success">Confirmed</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Not Confirmed</span>
+                                }
+                            </td>
+                            <td class="text-nowrap">
+                                <a asp-action="Confirm" asp-route-id="@item.CarId" class="btn btn-primary btn-sm"><i class="bi bi-check-circle"></i> Confirm</a>
+                                @* <a asp-action="Edit" asp-route-id="@item.CarId" class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i> Edit</a> *@
+                                @* <a asp-action="Details" asp-route-id="@item.CarId" class="btn btn-info btn-sm"><i class="bi bi-eye"></i> Details</a> *@
+                                @* <a asp-action="Delete" asp-route-id="@item.CarId" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i> Delete</a> *@
+                            </td>
+                        </tr>
+
+                        counter++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-success text-center fs-1 py-5" role="alert">
+        کارتابل شما خالی میباشد
+    </div>
+}
