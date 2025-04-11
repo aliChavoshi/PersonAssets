@@ -6,6 +6,6 @@ public class PersonCar
     public int PersonId { get; set; }
     public bool IsConfirmed { get; set; } = false;
 
-    public Person Person { get; set; }
-    public Car Car { get; set; }
+    public Person Person { get; set; } //entity
+    public Car Car { get; set; } //entity
 }

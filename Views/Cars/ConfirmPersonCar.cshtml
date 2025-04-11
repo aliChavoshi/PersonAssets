@@ -4,6 +4,17 @@
 @{
     ViewData["Title"] = "Confirm Person Car List";
     var counter = 1;
+    // Layout = "_Layout";
+}
+@{
+    if (TempData["Success"] != null)
+    {
+        <p>عملیات با موفقیا انجام شد</p>
+    }
+    else if (TempData["Error"] != null)
+    {
+        <p>خطایی در ثبت داده وجود دارد</p>
+    }
 }
 @if (Model.Any())
 {
@@ -61,7 +72,7 @@
                                 }
                             </td>
                             <td class="text-nowrap">
-                                <a asp-action="Confirm" asp-route-id="@item.CarId" class="btn btn-primary btn-sm"><i class="bi bi-check-circle"></i> Confirm</a>
+                                <a onclick="GetApprovePersonCar(@item.CarId,@item.PersonId)" class="btn btn-primary btn-sm"><i class="bi bi-check-circle"></i> Confirm</a>
                                 @* <a asp-action="Edit" asp-route-id="@item.CarId" class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i> Edit</a> *@
                                 @* <a asp-action="Details" asp-route-id="@item.CarId" class="btn btn-info btn-sm"><i class="bi bi-eye"></i> Details</a> *@
                                 @* <a asp-action="Delete" asp-route-id="@item.CarId" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i> Delete</a> *@
@@ -80,4 +91,22 @@ else
     <div class="alert alert-success text-center fs-1 py-5" role="alert">
         کارتابل شما خالی میباشد
     </div>
+}
+@* hide == fade *@
+<partial name="_PartialModalView"/>
+@section Scripts
+{
+    <script>
+         function GetApprovePersonCar(carId,personId) {
+            $.ajax({
+                url: `/Cars/ApprovePersonCar/${carId}/${personId}`,
+                type: 'GET',
+                date: {}
+            }).done(function(result) {
+                $('#exampleModal').modal('show');
+                $('#exampleModalLabel').html('تایید خودروی  شخص');
+                $('#modalBody').html(result);
+            });
+        }
+    </script>
 }

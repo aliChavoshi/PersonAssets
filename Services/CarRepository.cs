@@ -75,7 +75,8 @@ public class CarRepository(ApplicationDbContext context, IMapper mapper) : ICarR
             {
                 CarId = personCar.CarId,
                 OwnerId = personCar.PersonId,
-                OwnerName = personCar.Person.LastName + " " + personCar.Person.FirstName + "--" + personCar.Person.NationalCode
+                OwnerName = personCar.Person.LastName + " " + personCar.Person.FirstName + "--" +
+                            personCar.Person.NationalCode
             });
         }
 
@@ -98,16 +99,30 @@ public class CarRepository(ApplicationDbContext context, IMapper mapper) : ICarR
             .Where(x => x.IsConfirmed == false)
             .Include(x => x.Car)
             .Include(x => x.Person)
-            .Select(x => new ConfirmPersonCarViewModel
+            .Select(personCar => new ConfirmPersonCarViewModel
             {
-                CarId = x.CarId,
-                Name = x.Car.Name,
-                NumberPlate = x.Car.NumberPlate,
-                PersonId = x.PersonId,
-                FirstName = x.Person.FirstName,
-                LastName = x.Person.LastName,
-                NationalCode = x.Person.NationalCode,
-                IsConfirmed = x.IsConfirmed
-            }).OrderBy(x=>x.Name).ToListAsync();
+                CarId = personCar.CarId,
+                Name = personCar.Car.Name,
+                NumberPlate = personCar.Car.NumberPlate,
+                PersonId = personCar.PersonId,
+                FirstName = personCar.Person.FirstName,
+                LastName = personCar.Person.LastName,
+                NationalCode = personCar.Person.NationalCode,
+                IsConfirmed = personCar.IsConfirmed,
+            }).OrderBy(x => x.Name).ToListAsync();
+    }
+
+    public async Task<bool> ApprovePersonCar(int carId, int personId)
+    {
+        var entity = await context.PersonCars
+            .FirstOrDefaultAsync(x => x.CarId == carId && x.PersonId == personId && x.IsConfirmed == false);
+        if (entity != null)
+        {
+            entity.IsConfirmed = true;
+            context.Update(entity);
+            return await context.SaveChangesAsync() > 0;
+        }
+
+        return false;
     }
 }

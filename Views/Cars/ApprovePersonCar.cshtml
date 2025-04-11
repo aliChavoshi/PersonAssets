@@ -1,0 +1,17 @@
+﻿@model PersonAssets.Models.Car.ApprovePersonCarViewModel
+
+<form method="post" id="submitForm" asp-action="ApprovePersonCar" class="d-flex justify-content-center">
+    <div class="form-container">
+        <input type="hidden" asp-for="CarId" />
+        <input type="hidden" asp-for="PersonId" />
+        <div class="modal-body">
+            @* <div class="form-group"> *@
+            @*     <label class="col-form-label" asp-for="Title"></label> *@
+            @*     <input required readonly asp-for="Title" value="@Model.Title" type="text" class="form-control"> *@
+            @* </div> *@
+            <div class="alert alert-danger" role="alert">
+                آیا این خودرو برای این شخص مورد تایید میباشد ؟
+            </div>
+        </div>
+    </div>
+</form>

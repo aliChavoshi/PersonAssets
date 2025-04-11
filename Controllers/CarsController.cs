@@ -174,9 +174,36 @@ public class CarsController(
         return View(view);
     }
 
+    //کارتابل
     [HttpGet]
     public async Task<IActionResult> ConfirmPersonCar()
     {
         return View(await carRepository.GetUnConfirmedPersonCar());
+    }
+
+    [HttpGet("{carId:int}/{personId:int}")]
+    public IActionResult ApprovePersonCar(int carId,int personId)
+    {
+        return PartialView(new ApprovePersonCarViewModel
+        {
+            CarId = carId,
+            PersonId = personId
+        });
+    }
+
+    [HttpPost("{carId:int}/{personId:int}")]
+    public async Task<IActionResult> ApprovePersonCar(ApprovePersonCarViewModel model)
+    {
+        // ViewBag
+        // ViewData[""]
+        if(await carRepository.ApprovePersonCar(model.CarId, model.PersonId))
+        {
+            TempData["Success"] = "عملیات با موفقیت انجام شد";
+        }
+        else
+        {
+            TempData["Error"] = "عملیات با خطا مواجه شد";
+        }
+        return RedirectToAction("ConfirmPersonCar");
     }
 }
