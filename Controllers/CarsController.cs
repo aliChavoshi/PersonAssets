@@ -27,6 +27,7 @@ public class CarsController(
     // GET: Cars
     // [Authorize]
     // [AllowAnonymous]
+    //EndPoint : Index
     public async Task<IActionResult> Index(string searchString)
     {
         var model = await carRepository.GetAllCars(searchString);

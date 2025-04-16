@@ -23,6 +23,7 @@
     <Folder Include="Areas\Test\Data\" />
     <Folder Include="Areas\Test\Models\" />
     <Folder Include="Areas\Test\Views\Shared\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 </Project>
