@@ -39,7 +39,7 @@ var app = builder.Build(); // Build
 app.MapGet("/products/{id:int}", async (HttpContext context) =>
 {
     var id = context.Request.RouteValues["id"];
-    await context.Response.WriteAsync("Get Hello");
+    await context.Response.WriteAsync($"Get Hello {id}");
 });
 #region MyRegion
 

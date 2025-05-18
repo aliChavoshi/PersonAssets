@@ -23,6 +23,44 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     //     base.OnConfiguring(optionsBuilder);
     // }
 
+    public override int SaveChanges()
+    {
+        return base.SaveChanges();
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    {
+        var entries = ChangeTracker.Entries<AuditableEntity>()
+            .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified ||
+                        e.State == EntityState.Deleted);
+        //
+        foreach (var entry in entries)
+            if (entry.State is EntityState.Added or EntityState.Modified or EntityState.Deleted)
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        // entry.Entity.CreatorUser = currentUser.UserId;
+                        // entry.Entity.CreateDate = clock.Now;
+                        // entry.Entity.IsDeleted = false;
+                        // entry.Entity.Version = 0;
+                        break;
+                    case EntityState.Modified:
+                        entry.Entity.ModifiedBy = "";
+                        entry.Entity.ModifiedDateTime = entry.Entity.ModifiedDateTime = DateTime.Now;
+                        entry.Entity.Version += 1;
+                        break;
+                    case EntityState.Deleted:
+                        // entry.Entity.IsDeleted = true;
+                        // entry.Entity.ModifierUser = currentUser.UserId > 0 ? currentUser.UserId : null;
+                        // entry.Entity.ModificationDate = clock.Now;
+                        // entry.Entity.Version += 1;
+                        entry.State = EntityState.Modified;
+                        break;
+                }
+
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

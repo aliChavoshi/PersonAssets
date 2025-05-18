@@ -32,9 +32,12 @@ public class CarsController(
     {
         var model = await carRepository.GetAllCars(searchString);
         return View(model);
+        // return Ok(); //web api
     }
 
     // GET: Cars/Details/5
+    // [AllowAnonymous]
+    // [Route("ali")]
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
@@ -52,7 +55,9 @@ public class CarsController(
         return View(car);
     }
 
-    // GET: Cars/Create
+    // GET: Cars/CreateCar
+    // [HttpGet(Name = "CreateCar")]
+    // [ActionName("Create")]
     public IActionResult Create()
     {
         return View();

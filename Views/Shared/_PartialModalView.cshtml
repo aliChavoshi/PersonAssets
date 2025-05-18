@@ -1,4 +1,5 @@
-﻿<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+﻿@model string
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog " role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -10,7 +11,7 @@
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
-                <button form="submitForm" type="submit" id="btnSubmit" class="btn btn-success btn-shadow-hover font-weight-bold mr-2">ثبت</button>
+                <button form="submitForm" type="submit" id="btnSubmit" class="btn btn-success btn-shadow-hover font-weight-bold mr-2">@Model</button>
             </div>
         </div>
     </div>

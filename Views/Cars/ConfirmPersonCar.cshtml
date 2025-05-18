@@ -4,7 +4,7 @@
 @{
     ViewData["Title"] = "Confirm Person Car List";
     var counter = 1;
-    // Layout = "_Layout";
+    Layout = "_Layout";
 }
 @{
     if (TempData["Success"] != null)
@@ -36,18 +36,18 @@
         <div class="table-responsive">
             <table class="table table-hover table-bordered text-center">
                 <thead class="table-dark">
-                <tr>
-                    <th>#</th>
-                    @* <th>@Html.DisplayNameFor(model => model.CarId)</th> *@
-                    <th>@Html.DisplayNameFor(model => model.Name)</th>
-                    <th>@Html.DisplayNameFor(model => model.NumberPlate)</th>
-                    @* <th>@Html.DisplayNameFor(model => model.PersonId)</th> *@
-                    <th>@Html.DisplayNameFor(model => model.FirstName)</th>
-                    <th>@Html.DisplayNameFor(model => model.LastName)</th>
-                    <th>@Html.DisplayNameFor(model => model.NationalCode)</th>
-                    <th>@Html.DisplayNameFor(model => model.IsConfirmed)</th>
-                    <th>Actions</th>
-                </tr>
+                    <tr>
+                        <th>#</th>
+                        @* <th>@Html.DisplayNameFor(model => model.CarId)</th> *@
+                        <th>@Html.DisplayNameFor(model => model.Name)</th>
+                        <th>@Html.DisplayNameFor(model => model.NumberPlate)</th>
+                        @* <th>@Html.DisplayNameFor(model => model.PersonId)</th> *@
+                        <th>@Html.DisplayNameFor(model => model.FirstName)</th>
+                        <th>@Html.DisplayNameFor(model => model.LastName)</th>
+                        <th>@Html.DisplayNameFor(model => model.NationalCode)</th>
+                        <th>@Html.DisplayNameFor(model => model.IsConfirmed)</th>
+                        <th>Actions</th>
+                    </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model)
@@ -88,12 +88,16 @@
 }
 else
 {
-    <div class="alert alert-success text-center fs-1 py-5" role="alert">
-        کارتابل شما خالی میباشد
-    </div>
+    <partial name="EmptyDataPartialView"/>
 }
-@* hide == fade *@
-<partial name="_PartialModalView"/>
+@{
+    const string btnName = "تایید خودرو";
+    await Html.RenderPartialAsync("_PartialModalView", btnName); //Streams content browser
+}
+@* Call Partial View Return Content *@
+@* @await Html.PartialAsync("_PartialModalView",btnName) *@ 
+@* <partial name="_PartialModalView" model="btnName"/> *@
+
 @section Scripts
 {
     <script>
